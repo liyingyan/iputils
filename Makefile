@@ -3,26 +3,26 @@
 #
 
 # CC
-CC=gcc
-# Path to parent kernel include files directory
-LIBC_INCLUDE=/usr/include
-# Libraries
-ADDLIB=
+CC=gcc                           #用gcc编译程序
+# Path to parent kernel include files directory   
+LIBC_INCLUDE=/usr/include        #设置库函数路径
+# Libraries 
+ADDLIB= 
 # Linker flags
-LDFLAG_STATIC=-Wl,-Bstatic
-LDFLAG_DYNAMIC=-Wl,-Bdynamic
-LDFLAG_CAP=-lcap
-LDFLAG_GNUTLS=-lgnutls-openssl
-LDFLAG_CRYPTO=-lcrypto
-LDFLAG_IDN=-lidn
-LDFLAG_RESOLV=-lresolv
-LDFLAG_SYSFS=-lsysfs
+LDFLAG_STATIC=-Wl,-Bstatic        #连接静态库
+LDFLAG_DYNAMIC=-Wl,-Bdynamic      #连接动态库
+LDFLAG_CAP=-lcap                  #连接CAP分布式数据库
+LDFLAG_GNUTLS=-lgnutls-openssl    #连接GNUTLS安全通讯库
+LDFLAG_CRYPTO=-lcrypto            #连接密码类库
+LDFLAG_IDN=-lidn                  #连接IDN域名库
+LDFLAG_RESOLV=-lresolv            #连接RESOLV库
+LDFLAG_SYSFS=-lsysfs              #连接SYSFS库
 
 #
 # Options
 #
 
-# Capability support (with libcap) [yes|static|no]
+# Capability support (with libcap) [yes|static|no]    #能力支持（用libcap）
 USE_CAP=yes
 # sysfs support (with libsysfs - deprecated) [no|yes|static]
 USE_SYSFS=no
