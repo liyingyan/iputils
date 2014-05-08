@@ -31,10 +31,12 @@ USE_IDN=no           #支持IDN库
 
 # Do not use getifaddrs [no|yes|static]      #不要使用getifaddrs [否/是/静态]
 WITHOUT_IFADDRS=no
-# arping default device (e.g. eth0) []       #apr默认设备
+# arping default device (e.g. eth0) []       #apr默认设备 
+#使用arping向目的主机发送ARP报文，通过目的主机的IP获得该主机的硬件地址
 ARPING_DEFAULT_DEVICE=
 
 # GNU TLS library for ping6 [yes|no|static]  #TSL库ping6的状态
+#使用 ping可以测试计算机名和计算机的ip地址，验证与远程计算机的连接
 USE_GNUTLS=yes
 # Crypto library for ping6 [shared|static]   #CRYPTO库ping6的状态，共享
 USE_CRYPTO=shared
@@ -44,6 +46,7 @@ USE_RESOLV=yes
 ENABLE_PING6_RTHDR=no
 
 # rdisc server (-r option) support [no|yes]    #RDISC服务器支持（默认-r选项）
+#rdisc是路由器发现守护程序
 ENABLE_RDISC_SERVER=no
 
 # -------------------------------------
@@ -57,7 +60,7 @@ CCOPT=-fno-strict-aliasing -Wstrict-prototypes -Wall -g
 #-Wall参数,编辑器将列出所有的警告信息
 #-g 生成调试信息
 CCOPTOPT=-O3   #-O优化参数，-O3一般为最高级别
-GLIBCFIX=-D_GNU_SOURCE
+GLIBCFIX=-D_GNU_SOURCE  #_GNU_SOURCE宏,表示编写符合 GNU 规范的代码
 DEFINES=
 LDLIB=
 
@@ -65,6 +68,7 @@ FUNC_LIB = $(if $(filter static,$(1)),$(LDFLAG_STATIC) $(2) $(LDFLAG_DYNAMIC),$(
 
 # USE_GNUTLS: DEF_GNUTLS, LIB_GNUTLS
 # USE_CRYPTO: LIB_CRYPTO
+#判断CRYPTO库中函数是否重复
 ifneq ($(USE_GNUTLS),no)
 	LIB_CRYPTO = $(call FUNC_LIB,$(USE_GNUTLS),$(LDFLAG_GNUTLS))
 	DEF_CRYPTO = -DUSE_GNUTLS
@@ -76,34 +80,40 @@ endif
 LIB_RESOLV = $(call FUNC_LIB,$(USE_RESOLV),$(LDFLAG_RESOLV))
 
 # USE_CAP:  DEF_CAP, LIB_CAP
+# 判断CAP库中函数是否重复
 ifneq ($(USE_CAP),no)
 	DEF_CAP = -DCAPABILITIES
 	LIB_CAP = $(call FUNC_LIB,$(USE_CAP),$(LDFLAG_CAP))
 endif
 
 # USE_SYSFS: DEF_SYSFS, LIB_SYSFS
+#判断SYSFS库中函数是否重复
 ifneq ($(USE_SYSFS),no)
 	DEF_SYSFS = -DUSE_SYSFS
 	LIB_SYSFS = $(call FUNC_LIB,$(USE_SYSFS),$(LDFLAG_SYSFS))
 endif
 
 # USE_IDN: DEF_IDN, LIB_IDN
+判断IDN库中函数是否重复
 ifneq ($(USE_IDN),no)
 	DEF_IDN = -DUSE_IDN
 	LIB_IDN = $(call FUNC_LIB,$(USE_IDN),$(LDFLAG_IDN))
 endif
 
 # WITHOUT_IFADDRS: DEF_WITHOUT_IFADDRS
+#缺省FADDRS
 ifneq ($(WITHOUT_IFADDRS),no)
 	DEF_WITHOUT_IFADDRS = -DWITHOUT_IFADDRS
 endif
 
 # ENABLE_RDISC_SERVER: DEF_ENABLE_RDISC_SERVER
+#保障RDISC服务器
 ifneq ($(ENABLE_RDISC_SERVER),no)
 	DEF_ENABLE_RDISC_SERVER = -DRDISC_SERVER
 endif
 
 # ENABLE_PING6_RTHDR: DEF_ENABLE_PING6_RTHDR
+
 ifneq ($(ENABLE_PING6_RTHDR),no)
 	DEF_ENABLE_PING6_RTHDR = -DPING6_ENABLE_RTHDR
 ifeq ($(ENABLE_PING6_RTHDR),RFC3542)
