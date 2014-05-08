@@ -94,7 +94,7 @@ ifneq ($(USE_SYSFS),no)
 endif
 
 # USE_IDN: DEF_IDN, LIB_IDN
-判断IDN库中函数是否重复
+#判断IDN库中函数是否重复
 ifneq ($(USE_IDN),no)
 	DEF_IDN = -DUSE_IDN
 	LIB_IDN = $(call FUNC_LIB,$(USE_IDN),$(LDFLAG_IDN))
