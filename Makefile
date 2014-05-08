@@ -51,6 +51,11 @@ ENABLE_RDISC_SERVER=no
 #-Werror 把所有的告警都转化为编译错误。只要有告警就停止编译。
 # CCOPT=-fno-strict-aliasing -Wstrict-prototypes -Wall -Werror -g
 CCOPT=-fno-strict-aliasing -Wstrict-prototypes -Wall -g
+#-fno-strict-aliasing，编译器认为任何 指针都可能指向同一个内存区域;
+#-fstrict-aliasing的时候编译器会假设不同类型的指针指向的内存不会重叠来进行优化
+#-Wstrict-prototypes         使用了非原型的函数声明时给出警告
+#-Wall参数,编辑器将列出所有的警告信息
+#-g 生成调试信息
 CCOPTOPT=-O3   #-O优化参数，-O3一般为最高级别
 GLIBCFIX=-D_GNU_SOURCE
 DEFINES=
