@@ -214,14 +214,14 @@ tftpd.o tftpsubs.o: tftp.h
 ninfod:
 	@set -e; \       # 如果命令带非零值返回,退出
 		if [ ! -f ninfod/Makefile ]; then \     # 当file存在并且是正规文件时返回真
-			cd ninfod; \
+			cd ninfod; \              #切换到指定目录
 			./configure; \
-			cd ..; \
+			cd ..; \           #回到上一级目录
 		fi; \
 		$(MAKE) -C ninfod
 
 # -------------------------------------
-# modules / check-kernel are only for ancient kernels; obsolete
+# modules / check-kernel are only for ancient kernels; obsolete   #模块
 check-kernel:
 ifeq ($(KERNEL_INCLUDE),)
 	@echo "Please, set correct KERNEL_INCLUDE"; false
@@ -241,7 +241,8 @@ man:
 html:
 	$(MAKE) -C doc html
 
-clean:
+clean:                                        
+#删除
 	@rm -f *.o $(TARGETS)
 	@$(MAKE) -C Modules clean
 	@$(MAKE) -C doc clean
