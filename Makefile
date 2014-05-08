@@ -9,48 +9,49 @@ LIBC_INCLUDE=/usr/include        #设置库函数路径
 # Libraries 
 ADDLIB= 
 # Linker flags
-LDFLAG_STATIC=-Wl,-Bstatic        #连接静态库
+LDFLAG_STATIC=-Wl,-Bstatic        #连接静态库,-Bstatic参数保证链接器对接下来的-l选项使用静态链接
 LDFLAG_DYNAMIC=-Wl,-Bdynamic      #连接动态库
 LDFLAG_CAP=-lcap                  #连接CAP分布式数据库
 LDFLAG_GNUTLS=-lgnutls-openssl    #连接GNUTLS安全通讯库
 LDFLAG_CRYPTO=-lcrypto            #连接密码类库
 LDFLAG_IDN=-lidn                  #连接IDN域名库
 LDFLAG_RESOLV=-lresolv            #连接RESOLV库
-LDFLAG_SYSFS=-lsysfs              #连接SYSFS库
+LDFLAG_SYSFS=-lsysfs              #连接SYSFS接口函数库
 
 #
 # Options
 #
 
-# Capability support (with libcap) [yes|static|no]    #能力支持（用libcap）
-USE_CAP=yes
-# sysfs support (with libsysfs - deprecated) [no|yes|static]
-USE_SYSFS=no
+# Capability support (with libcap) [yes|static|no]    #能力支持，设置开关
+USE_CAP=yes          #支持CAP函数库
+# sysfs support (with libsysfs - deprecated) [no|yes|static]   #[否，静态，是]
+USE_SYSFS=no         #支持SYSFS库
 # IDN support (experimental) [no|yes|static]
-USE_IDN=no
+USE_IDN=no           #支持IDN库
 
-# Do not use getifaddrs [no|yes|static]
+# Do not use getifaddrs [no|yes|static]      #不要使用getifaddrs [否/是/静态]
 WITHOUT_IFADDRS=no
-# arping default device (e.g. eth0) []
+# arping default device (e.g. eth0) []       #apr默认设备
 ARPING_DEFAULT_DEVICE=
 
-# GNU TLS library for ping6 [yes|no|static]
+# GNU TLS library for ping6 [yes|no|static]  #TSL库ping6的状态
 USE_GNUTLS=yes
-# Crypto library for ping6 [shared|static]
+# Crypto library for ping6 [shared|static]   #CRYPTO库ping6的状态，共享
 USE_CRYPTO=shared
-# Resolv library for ping6 [yes|static]
+# Resolv library for ping6 [yes|static]     #RESOLV库ping6的状态
 USE_RESOLV=yes
-# ping6 source routing (deprecated by RFC5095) [no|yes|RFC3542]
+# ping6 source routing (deprecated by RFC5095) [no|yes|RFC3542]   #ping6资源路径
 ENABLE_PING6_RTHDR=no
 
-# rdisc server (-r option) support [no|yes]
+# rdisc server (-r option) support [no|yes]    #RDISC服务器支持（默认-r选项）
 ENABLE_RDISC_SERVER=no
 
 # -------------------------------------
-# What a pity, all new gccs are buggy and -Werror does not work. Sigh.
+# What a pity, all new gccs are buggy and -Werror does not work. Sigh.  #所有新的gcc都是有问题的，并且-Werror命令不工作。
+#-Werror 把所有的告警都转化为编译错误。只要有告警就停止编译。
 # CCOPT=-fno-strict-aliasing -Wstrict-prototypes -Wall -Werror -g
 CCOPT=-fno-strict-aliasing -Wstrict-prototypes -Wall -g
-CCOPTOPT=-O3
+CCOPTOPT=-O3   #-O优化参数，-O3一般为最高级别
 GLIBCFIX=-D_GNU_SOURCE
 DEFINES=
 LDLIB=
