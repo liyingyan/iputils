@@ -123,10 +123,10 @@ TAG:=$(shell date --date=$(TODAY) +s%Y%m%d)
 # -------------------------------------
 .PHONY: all ninfod clean distclean man html check-kernel modules snapshot
 
-all: $(TARGETS)
+all: $(TARGETS)                        #要编译的可执行文件列表
 
-%.s: %.c
-	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -S -o $@
+%.s: %.c                               #用通配符编译文件
+	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -S -o $@       #patsubst用于有函数依赖于外部库的情况
 %.o: %.c
 	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -o $@
 $(TARGETS): %: %.o
