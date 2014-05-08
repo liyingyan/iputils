@@ -113,7 +113,7 @@ ifneq ($(ENABLE_RDISC_SERVER),no)
 endif
 
 # ENABLE_PING6_RTHDR: DEF_ENABLE_PING6_RTHDR
-
+#保障ping6文件
 ifneq ($(ENABLE_PING6_RTHDR),no)
 	DEF_ENABLE_PING6_RTHDR = -DPING6_ENABLE_RTHDR
 ifeq ($(ENABLE_PING6_RTHDR),RFC3542)
@@ -122,9 +122,9 @@ endif
 endif
 
 # -------------------------------------
-IPV4_TARGETS=tracepath ping clockdiff rdisc arping tftpd rarpd
-IPV6_TARGETS=tracepath6 traceroute6 ping6
-TARGETS=$(IPV4_TARGETS) $(IPV6_TARGETS)
+IPV4_TARGETS=tracepath ping clockdiff rdisc arping tftpd rarpd  #ipv4对象：iputils包含的七个工具
+IPV6_TARGETS=tracepath6 traceroute6 ping6                       #ipv6对象：tracepath6 traceroute6 ping6 
+TARGETS=$(IPV4_TARGETS) $(IPV6_TARGETS)                         #可执行文件列表
 
 CFLAGS=$(CCOPTOPT) $(CCOPT) $(GLIBCFIX) $(DEFINES)
 LDLIBS=$(LDLIB) $(ADDLIB)
@@ -139,17 +139,25 @@ TAG:=$(shell date --date=$(TODAY) +s%Y%m%d)
 # -------------------------------------
 .PHONY: all ninfod clean distclean man html check-kernel modules snapshot
 
-all: $(TARGETS)                        #要编译的可执行文件列表
+all: $(TARGETS)                       
+#要编译的可执行文件列表
 
-%.s: %.c                               #用通配符编译文件
+%.s: %.c                              
+#用通配符编译文件
 	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -S -o $@       #patsubst用于有函数依赖于外部库的情况
 %.o: %.c
 	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -o $@
 $(TARGETS): %: %.o
 	$(LINK.o) $^ $(LIB_$@) $(LDLIBS) -o $@
-
+# $< 依赖目标中的第一个目标名字 
+# $@ 表示目标
+# $^ 所有的依赖目标的集合 
+# 在$(patsubst %.o,%,$@ )中，patsubst把目标中的变量符合后缀是.o的全部删除, DEF_ping
+# LINK.o把.o文件链接在一起的命令行,缺省值是$(CC) $(LDFLAGS) $(TARGET_ARCH)
+# $(patsubst %.o,%,$@) 的意思是把指定filename.o文件变为filename
+# patsubst函数：3个参数。功能是将第三个参数中的每一项（由空格分隔）符合第一个参数描述的部分替换成第二个参数制定的值
 # -------------------------------------
-# arping
+# arping    # 使用arping向目的主机发送ARP报文，通过目的主机的IP获得该主机的硬件地址
 DEF_arping = $(DEF_SYSFS) $(DEF_CAP) $(DEF_IDN) $(DEF_WITHOUT_IFADDRS)
 LIB_arping = $(LIB_SYSFS) $(LIB_CAP) $(LIB_IDN)
 
@@ -157,11 +165,11 @@ ifneq ($(ARPING_DEFAULT_DEVICE),)
 DEF_arping += -DDEFAULT_DEVICE=\"$(ARPING_DEFAULT_DEVICE)\"
 endif
 
-# clockdiff
-DEF_clockdiff = $(DEF_CAP)
+# clockdiff    #使用clockdiff可以测算目的主机和本地主机的系统时间差。clockdiff程序由clockdiff.c文件构成。
 LIB_clockdiff = $(LIB_CAP)
 
-# ping / ping6
+# ping / ping6    
+#使用 ping可以测试计算机名和计算机的ip地址，验证与远程计算机的连接。ping程序由ping.c ping6.cping_common.c ping.h 文件构成
 DEF_ping_common = $(DEF_CAP) $(DEF_IDN)
 DEF_ping  = $(DEF_CAP) $(DEF_IDN) $(DEF_WITHOUT_IFADDRS)
 LIB_ping  = $(LIB_CAP) $(LIB_IDN)
@@ -173,15 +181,15 @@ ping6: ping_common.o
 ping.o ping_common.o: ping_common.h
 ping6.o: ping_common.h in6_flowlabel.h
 
-# rarpd
+# rarpd    #rarpd是逆地址解析协议的服务端程序。rarpd程序由rarpd.c文件构成。
 DEF_rarpd =
 LIB_rarpd =
 
-# rdisc
+# rdisc     #rdisc是路由器发现守护程序。rdisc程序由rdisc.c文件构成。
 DEF_rdisc = $(DEF_ENABLE_RDISC_SERVER)
 LIB_rdisc =
 
-# tracepath
+# tracepath     #与traceroute功能相似，使用tracepath测试IP数据报文从源主机传到目的主机经过的路由。tracepath程序由tracepath.c tracepath6.c traceroute6.c 文件构成。
 DEF_tracepath = $(DEF_IDN)
 LIB_tracepath = $(LIB_IDN)
 
@@ -193,7 +201,7 @@ LIB_tracepath6 =
 DEF_traceroute6 = $(DEF_CAP) $(DEF_IDN)
 LIB_traceroute6 = $(LIB_CAP) $(LIB_IDN)
 
-# tftpd
+# tftpd   #tftpd是简单文件传送协议TFTP的服务端程序。tftpd程序由tftp.h tftpd.c tftpsubs.c文件构成。
 DEF_tftpd =
 DEF_tftpsubs =
 LIB_tftpd =
@@ -204,8 +212,8 @@ tftpd.o tftpsubs.o: tftp.h
 # -------------------------------------
 # ninfod
 ninfod:
-	@set -e; \
-		if [ ! -f ninfod/Makefile ]; then \
+	@set -e; \       # 如果命令带非零值返回,退出
+		if [ ! -f ninfod/Makefile ]; then \     # 当file存在并且是正规文件时返回真
 			cd ninfod; \
 			./configure; \
 			cd ..; \
